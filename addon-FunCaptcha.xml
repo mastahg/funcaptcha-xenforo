@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="FunCaptcha" title="FunCaptcha" version_string="1.0.0" version_id="100" url="http://funcaptcha.co" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+  <admin_navigation/>
+  <admin_permissions/>
+  <admin_style_properties/>
+  <admin_templates/>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="option_captcha_render" execute_order="1" callback_class="FunCaptcha_Listener_Options" callback_method="captcha" active="1" description="Extend Captcha Options"/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <optiongroups>
+    <option option_id="funcaptcha_private_key" edit_format="textbox" data_type="string" can_backup="1">
+      <default_value></default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="spam" display_order="920"/>
+    </option>
+    <option option_id="funcaptcha_public_key" edit_format="textbox" data_type="string" can_backup="1">
+      <default_value></default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="spam" display_order="910"/>
+    </option>
+    <option option_id="funcaptcha_theme" edit_format="select" data_type="integer" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params>0 = Default
+1 = Slate Blue
+2 = vBulletin Blue
+3 = White
+4 = Black</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="spam" display_order="930"/>
+    </option>
+  </optiongroups>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="funcaptcha_set_keys_first" version_id="100" version_string="1.0.0"><![CDATA[Set your FunCaptcha keys first.]]></phrase>
+    <phrase title="funcaptcha_use_funcaptcha" version_id="100" version_string="1.0.0"><![CDATA[Use FunCaptcha]]></phrase>
+    <phrase title="option_funcaptcha_private_key" version_id="100" version_string="1.0.0"><![CDATA[FunCaptcha Private Key]]></phrase>
+    <phrase title="option_funcaptcha_private_key_explain" version_id="100" version_string="1.0.0"><![CDATA[You can get the private key in your control panel on <a href="https://www.funcaptcha.co/" target="_blank">https://www.funcaptcha.co/</a>]]></phrase>
+    <phrase title="option_funcaptcha_public_key" version_id="100" version_string="1.0.0"><![CDATA[FunCaptcha Public Key]]></phrase>
+    <phrase title="option_funcaptcha_public_key_explain" version_id="100" version_string="1.0.0"><![CDATA[You can get the public key in your control panel on <a href="https://www.funcaptcha.co/" target="_blank">https://www.funcaptcha.co/</a>]]></phrase>
+    <phrase title="option_funcaptcha_theme" version_id="100" version_string="1.0.0"><![CDATA[FunCaptcha Theme]]></phrase>
+    <phrase title="option_funcaptcha_theme_explain" version_id="100" version_string="1.0.0"><![CDATA[See <a href="https://www.funcaptcha.co/themes/" target="_blank">https://www.funcaptcha.co/themes/</a>]]></phrase>
+  </phrases>
+  <route_prefixes/>
+  <style_properties/>
+  <templates/>
+  <bb_code_media_sites/>
+  <template_modifications/>
+</addon>
