@@ -1,37 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="FunCaptcha" title="FunCaptcha" version_string="1.0.0" version_id="100" url="http://funcaptcha.co" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+<addon addon_id="FunCaptcha" title="Fun Captcha" version_string="1.0.0.0" version_id="1" url="" install_callback_class="FunCaptcha_FunCaptcha" install_callback_method="Addon_Install" uninstall_callback_class="" uninstall_callback_method="">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
   <admin_templates/>
+  <admin_template_modifications/>
   <code_events/>
   <code_event_listeners>
-    <listener event_id="option_captcha_render" execute_order="1" callback_class="FunCaptcha_Listener_Options" callback_method="captcha" active="1" description="Extend Captcha Options"/>
+    <listener event_id="option_captcha_render" execute_order="10" callback_class="FunCaptcha_FunCaptcha" callback_method="CaptchaHook" active="1" hint="" description=""/>
   </code_event_listeners>
   <cron/>
   <email_templates/>
+  <email_template_modifications/>
   <optiongroups>
-    <option option_id="funcaptcha_private_key" edit_format="textbox" data_type="string" can_backup="1">
-      <default_value></default_value>
-      <edit_format_params></edit_format_params>
+    <group group_id="funCaptcha_Options" display_order="1" debug_only="0"/>
+    <option option_id="funcaptcha_javascript" edit_format="radio" data_type="integer" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params>0 = Disabled
+1 = Enabled</edit_format_params>
       <sub_options></sub_options>
-      <relation group_id="spam" display_order="920"/>
+      <relation group_id="funCaptcha_Options" display_order="100"/>
     </option>
-    <option option_id="funcaptcha_public_key" edit_format="textbox" data_type="string" can_backup="1">
+    <option option_id="funcaptcha_lightbox" edit_format="radio" data_type="integer" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params>0 = Inline
+1 = Lightbox</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="funCaptcha_Options" display_order="110"/>
+    </option>
+    <option option_id="funcaptcha_private" edit_format="textbox" data_type="string" can_backup="1">
       <default_value></default_value>
       <edit_format_params></edit_format_params>
       <sub_options></sub_options>
-      <relation group_id="spam" display_order="910"/>
+      <relation group_id="funCaptcha_Options" display_order="2"/>
+    </option>
+    <option option_id="funcaptcha_proxy" edit_format="textbox" data_type="string" can_backup="1">
+      <default_value></default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="funCaptcha_Options" display_order="3"/>
+    </option>
+    <option option_id="funcaptcha_public" edit_format="textbox" data_type="string" can_backup="1">
+      <default_value></default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="funCaptcha_Options" display_order="1"/>
+    </option>
+    <option option_id="funcaptcha_security" edit_format="radio" data_type="integer" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params>0 = Automatic
+20 = Always Enhanced</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="funCaptcha_Options" display_order="120"/>
     </option>
     <option option_id="funcaptcha_theme" edit_format="select" data_type="integer" can_backup="1">
       <default_value>0</default_value>
-      <edit_format_params>0 = Default
-1 = Slate Blue
+      <edit_format_params>0 = Standard
 2 = vBulletin Blue
 3 = White
-4 = Black</edit_format_params>
+4 = Black
+5 = Automotive</edit_format_params>
       <sub_options></sub_options>
-      <relation group_id="spam" display_order="930"/>
+      <relation group_id="funCaptcha_Options" display_order="130"/>
     </option>
   </optiongroups>
   <permissions>
@@ -40,18 +70,27 @@
     <interface_groups/>
   </permissions>
   <phrases>
-    <phrase title="funcaptcha_set_keys_first" version_id="100" version_string="1.0.0"><![CDATA[Set your FunCaptcha keys first.]]></phrase>
-    <phrase title="funcaptcha_use_funcaptcha" version_id="100" version_string="1.0.0"><![CDATA[Use FunCaptcha]]></phrase>
-    <phrase title="option_funcaptcha_private_key" version_id="100" version_string="1.0.0"><![CDATA[FunCaptcha Private Key]]></phrase>
-    <phrase title="option_funcaptcha_private_key_explain" version_id="100" version_string="1.0.0"><![CDATA[You can get the private key in your control panel on <a href="https://www.funcaptcha.co/" target="_blank">https://www.funcaptcha.co/</a>]]></phrase>
-    <phrase title="option_funcaptcha_public_key" version_id="100" version_string="1.0.0"><![CDATA[FunCaptcha Public Key]]></phrase>
-    <phrase title="option_funcaptcha_public_key_explain" version_id="100" version_string="1.0.0"><![CDATA[You can get the public key in your control panel on <a href="https://www.funcaptcha.co/" target="_blank">https://www.funcaptcha.co/</a>]]></phrase>
-    <phrase title="option_funcaptcha_theme" version_id="100" version_string="1.0.0"><![CDATA[FunCaptcha Theme]]></phrase>
-    <phrase title="option_funcaptcha_theme_explain" version_id="100" version_string="1.0.0"><![CDATA[See <a href="https://www.funcaptcha.co/themes/" target="_blank">https://www.funcaptcha.co/themes/</a>]]></phrase>
+    <phrase title="option_funcaptcha_javascript" version_id="1" version_string="1.0.0.0"><![CDATA[Javascript Fallback]]></phrase>
+    <phrase title="option_funcaptcha_javascript_explain" version_id="1" version_string="1.0.0.0"><![CDATA[If the user does not have Javascript enabled, display a fallback CAPTCHA? (Most bots have Javascript disabled, we recommend you leave this disabled)]]></phrase>
+    <phrase title="option_funcaptcha_lightbox" version_id="1" version_string="1.0.0.0"><![CDATA[Lightbox Mode]]></phrase>
+    <phrase title="option_funcaptcha_lightbox_explain" version_id="1" version_string="1.0.0.0"><![CDATA[Lightbox mode will show FunCaptcha once the user submits your form, rather than on the page. Inline mode will show FunCaptcha on your page as the user completes your form. We recommend Lightbox for the best user experience]]></phrase>
+    <phrase title="option_funcaptcha_private" version_id="1" version_string="1.0.0"><![CDATA[Private Key]]></phrase>
+    <phrase title="option_funcaptcha_private_explain" version_id="1" version_string="1.0.0"><![CDATA[Enter your private key here.]]></phrase>
+    <phrase title="option_funcaptcha_proxy" version_id="1" version_string="1.0.0"><![CDATA[Proxy]]></phrase>
+    <phrase title="option_funcaptcha_proxy_explain" version_id="1" version_string="1.0.0"><![CDATA[Enter your http proxy address or IP here (leave empty for none).]]></phrase>
+    <phrase title="option_funcaptcha_public" version_id="1" version_string="1.0.0"><![CDATA[Public Key]]></phrase>
+    <phrase title="option_funcaptcha_public_explain" version_id="1" version_string="1.0.0"><![CDATA[Enter your public key here.]]></phrase>
+    <phrase title="option_funcaptcha_security" version_id="1" version_string="1.0.0.0"><![CDATA[Security Level]]></phrase>
+    <phrase title="option_funcaptcha_security_explain" version_id="1" version_string="1.0.0.0"><![CDATA[If you choose Automatic, security starts at the lowest level, and rises and falls automatically, adjusted by FunCaptcha's monitoring system. The Enhanced level has more challenges to solve, but is very hard for spammer programs to get past]]></phrase>
+    <phrase title="option_funcaptcha_theme" version_id="1" version_string="1.0.0.0"><![CDATA[Theme]]></phrase>
+    <phrase title="option_funcaptcha_theme_explain" version_id="1" version_string="1.0.0.0"><![CDATA[This will change the appearance of FunCaptcha (see <a href="http://www.funcaptcha.co/themes/" target="\&quot;_blank\&quot;">here</a> for what they look like)]]></phrase>
+    <phrase title="option_group_funCaptcha_Options" version_id="1" version_string="1.0.0"><![CDATA[FunCatptcha options]]></phrase>
+    <phrase title="option_group_funCaptcha_Options_description" version_id="1" version_string="1.0.0"><![CDATA[Configure and customise FunCaptcha.]]></phrase>
   </phrases>
   <route_prefixes/>
   <style_properties/>
   <templates/>
+  <public_template_modifications/>
   <bb_code_media_sites/>
-  <template_modifications/>
+  <bb_codes/>
 </addon>
