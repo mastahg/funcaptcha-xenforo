@@ -1,4 +1,0 @@
-funcaptcha-xenforo
-==================
-
-Coming soon
