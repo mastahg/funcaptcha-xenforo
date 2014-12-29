@@ -91,14 +91,14 @@ class FunCaptcha_FunCaptcha extends XenForo_Captcha_Abstract
 		// save options:
 		XenForo_Db::beginTransaction();
 		
-		foreach($remote_options as $option)
+		foreach(array_keys($remote_options) as $key)
 		{
 			try{
-				if (isset($arOptMap[$option->name]))
+				if (isset($arOptMap[$key]))
 				{
 					$dw = XenForo_DataWriter::create('XenForo_DataWriter_Option');
-					$dw->setExistingData($arOptMap[$option->name], true);
-					$dw->set('option_value', $option->value);
+					$dw->setExistingData($arOptMap[$key], true);
+					$dw->set('option_value', $remote_options[$key]);
 					$dw->save();
 				}
 			} catch (\Exception $e) {}
