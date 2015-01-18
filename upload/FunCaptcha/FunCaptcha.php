@@ -56,19 +56,13 @@ class FunCaptcha_FunCaptcha extends XenForo_Captcha_Abstract
 		// create api:
 		$funcaptcha =  new FUNCAPTCHA();
 		$funcaptcha->setSecurityLevel($options->funcaptcha_security);
-		$funcaptcha->setLightboxMode($options->funcaptcha_lightbox);
 		$funcaptcha->setProxy($options->funcaptcha_proxy);
 		$funcaptcha->setTheme($options->funcaptcha_theme);
 		$funcaptcha->setNoJSFallback($options->funcaptcha_javascript);
 		
-		//only show HTML/label if not lightbox mode.
-		if ($options->funcaptcha_lightbox) {
-				$output = "<p class='explain'>(FunCaptcha will appear when you submit)</p>" . $funcaptcha->getFunCaptcha($options->funcaptcha_public);
-		} else {
-				$output = "<div class=\"blockrow\"><input type=hidden value='1' id='humanverify' name='humanverify' /><div class=\"group\"><li>";
-				$output = $output . $funcaptcha->getFunCaptcha($options->funcaptcha_public);
-				$output = $output . "</li></div></div>";
-		}
+		$output = "<div class=\"blockrow\"><input type=hidden value='1' id='humanverify' name='humanverify' /><div class=\"group\"><li>";
+		$output = $output . $funcaptcha->getFunCaptcha($options->funcaptcha_public);
+		$output = $output . "</li></div></div>";
 		
 		// update any options from server:
 		if (isset($funcaptcha->remote_options))
@@ -83,7 +77,6 @@ class FunCaptcha_FunCaptcha extends XenForo_Captcha_Abstract
 		$arOptMap = array(
 			'proxy' => 'funcaptcha_proxy',
 			'security_level' => 'funcaptcha_security',
-			'lightbox' => 'funcaptcha_lightbox',
 			'theme' => 'funcaptcha_theme',
 			'noscript_support' => 'funcaptcha_javascript',
 		);
@@ -119,8 +112,8 @@ if ( ! class_exists('FUNCAPTCHA')) {
 		protected $funcaptcha_host = 'funcaptcha.co';
 		protected $funcaptcha_challenge_url = '';
 		protected $funcaptcha_debug = FALSE;
-		protected $funcaptcha_api_type = "php";
-		protected $funcaptcha_plugin_version = "1.0.1";
+		protected $funcaptcha_api_type = "xenforo";
+		protected $funcaptcha_plugin_version = "1.0.0";
 		protected $funcaptcha_security_level = 0;
 		protected $funcaptcha_lightbox_mode = FALSE;
 		protected $funcaptcha_lightbox_button_id = "";
@@ -257,7 +250,6 @@ if ( ! class_exists('FUNCAPTCHA')) {
 			$arOptMap = array(
 				'proxy' => 'funcaptcha_proxy',
 				'security_level' => 'funcaptcha_security',
-				'lightbox' => 'funcaptcha_lightbox',
 				'theme' => 'funcaptcha_theme',
 				'noscript_support' => 'funcaptcha_javascript',
 			);

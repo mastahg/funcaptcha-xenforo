@@ -21,13 +21,6 @@
       <sub_options></sub_options>
       <relation group_id="funCaptcha_Options" display_order="100"/>
     </option>
-    <option option_id="funcaptcha_lightbox" edit_format="radio" data_type="integer" can_backup="1">
-      <default_value>1</default_value>
-      <edit_format_params>0 = Inline
-1 = Lightbox</edit_format_params>
-      <sub_options></sub_options>
-      <relation group_id="funCaptcha_Options" display_order="110"/>
-    </option>
     <option option_id="funcaptcha_private" edit_format="textbox" data_type="string" can_backup="1">
       <default_value></default_value>
       <edit_format_params></edit_format_params>
@@ -72,8 +65,6 @@
   <phrases>
     <phrase title="option_funcaptcha_javascript" version_id="1" version_string="1.0.0.0"><![CDATA[Javascript Fallback]]></phrase>
     <phrase title="option_funcaptcha_javascript_explain" version_id="1" version_string="1.0.0.0"><![CDATA[If the user does not have Javascript enabled, display a fallback CAPTCHA? (Most bots have Javascript disabled, we recommend you leave this disabled)]]></phrase>
-    <phrase title="option_funcaptcha_lightbox" version_id="1" version_string="1.0.0.0"><![CDATA[Lightbox Mode]]></phrase>
-    <phrase title="option_funcaptcha_lightbox_explain" version_id="1" version_string="1.0.0.0"><![CDATA[Lightbox mode will show FunCaptcha once the user submits your form, rather than on the page. Inline mode will show FunCaptcha on your page as the user completes your form. We recommend Lightbox for the best user experience]]></phrase>
     <phrase title="option_funcaptcha_private" version_id="1" version_string="1.0.0"><![CDATA[Private Key]]></phrase>
     <phrase title="option_funcaptcha_private_explain" version_id="1" version_string="1.0.0"><![CDATA[Enter your private key here.]]></phrase>
     <phrase title="option_funcaptcha_proxy" version_id="1" version_string="1.0.0"><![CDATA[Proxy]]></phrase>
