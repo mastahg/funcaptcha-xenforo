@@ -113,7 +113,7 @@ if ( ! class_exists('FUNCAPTCHA')) {
 		protected $funcaptcha_challenge_url = '';
 		protected $funcaptcha_debug = FALSE;
 		protected $funcaptcha_api_type = "xenforo";
-		protected $funcaptcha_plugin_version = "1.0.0";
+		protected $funcaptcha_plugin_version = "1.0.1.0";
 		protected $funcaptcha_security_level = 0;
 		protected $funcaptcha_lightbox_mode = FALSE;
 		protected $funcaptcha_lightbox_button_id = "";
@@ -371,7 +371,7 @@ if ( ! class_exists('FUNCAPTCHA')) {
 				$data = array(
 					'private_key' 		=> $this->funcaptcha_private_key,
 					'session_token' 	=> $_POST['fc-token'],
-					'fc_rc_challenge' 	=> ($_POST['fc_rc_challenge'] ? $_POST['fc_rc_challenge'] : null),
+					'fc_rc_challenge' 	=> (isset($_POST['fc_rc_challenge']) ? $_POST['fc_rc_challenge'] : null),
 					'args'				=> $args
 				);
 				$result = $this->doPostReturnObject('/fc/v/', $data);
@@ -398,7 +398,9 @@ if ( ! class_exists('FUNCAPTCHA')) {
 				if (is_array($value)) {
 					if ( ! empty($value)) {
 						foreach ($value as $k => $v) {
-							$data_string .= $key . '['. $k .']=' . $v . '&';
+							if (!is_array($v)) {
+								$data_string .= $key . '['. $k .']=' . $v . '&';
+							}
 						}
 					} else {
 						$data_string .= $key . '=&';

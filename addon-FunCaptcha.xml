@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="FunCaptcha" title="Fun Captcha" version_string="1.0.0.0" version_id="1" url="" install_callback_class="FunCaptcha_FunCaptcha" install_callback_method="Addon_Install" uninstall_callback_class="" uninstall_callback_method="">
+<addon addon_id="FunCaptcha" title="Fun Captcha" version_string="1.0.1.0" version_id="1" url="" install_callback_class="FunCaptcha_FunCaptcha" install_callback_method="Addon_Install" uninstall_callback_class="" uninstall_callback_method="">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -63,19 +63,19 @@
     <interface_groups/>
   </permissions>
   <phrases>
-    <phrase title="option_funcaptcha_javascript" version_id="1" version_string="1.0.0.0"><![CDATA[Javascript Fallback]]></phrase>
-    <phrase title="option_funcaptcha_javascript_explain" version_id="1" version_string="1.0.0.0"><![CDATA[If the user does not have Javascript enabled, display a fallback CAPTCHA? (Most bots have Javascript disabled, we recommend you leave this disabled)]]></phrase>
+    <phrase title="option_funcaptcha_javascript" version_id="1" version_string="1.0.1.0"><![CDATA[Javascript Fallback]]></phrase>
+    <phrase title="option_funcaptcha_javascript_explain" version_id="1" version_string="1.0.1.0"><![CDATA[If the user does not have Javascript enabled, display a fallback CAPTCHA? (Most bots have Javascript disabled, we recommend you leave this disabled)]]></phrase>
     <phrase title="option_funcaptcha_private" version_id="1" version_string="1.0.0"><![CDATA[Private Key]]></phrase>
     <phrase title="option_funcaptcha_private_explain" version_id="1" version_string="1.0.0"><![CDATA[Enter your private key here.]]></phrase>
     <phrase title="option_funcaptcha_proxy" version_id="1" version_string="1.0.0"><![CDATA[Proxy]]></phrase>
     <phrase title="option_funcaptcha_proxy_explain" version_id="1" version_string="1.0.0"><![CDATA[Enter your http proxy address or IP here (leave empty for none).]]></phrase>
     <phrase title="option_funcaptcha_public" version_id="1" version_string="1.0.0"><![CDATA[Public Key]]></phrase>
     <phrase title="option_funcaptcha_public_explain" version_id="1" version_string="1.0.0"><![CDATA[Enter your public key here.]]></phrase>
-    <phrase title="option_funcaptcha_security" version_id="1" version_string="1.0.0.0"><![CDATA[Security Level]]></phrase>
-    <phrase title="option_funcaptcha_security_explain" version_id="1" version_string="1.0.0.0"><![CDATA[If you choose Automatic, security starts at the lowest level, and rises and falls automatically, adjusted by FunCaptcha's monitoring system. The Enhanced level has more challenges to solve, but is very hard for spammer programs to get past]]></phrase>
-    <phrase title="option_funcaptcha_theme" version_id="1" version_string="1.0.0.0"><![CDATA[Theme]]></phrase>
-    <phrase title="option_funcaptcha_theme_explain" version_id="1" version_string="1.0.0.0"><![CDATA[This will change the appearance of FunCaptcha (see <a href="http://www.funcaptcha.co/themes/" target="\&quot;_blank\&quot;">here</a> for what they look like)]]></phrase>
-    <phrase title="option_group_funCaptcha_Options" version_id="1" version_string="1.0.0"><![CDATA[FunCatptcha options]]></phrase>
+    <phrase title="option_funcaptcha_security" version_id="1" version_string="1.0.1.0"><![CDATA[Security Level]]></phrase>
+    <phrase title="option_funcaptcha_security_explain" version_id="1" version_string="1.0.1.0"><![CDATA[If you choose Automatic, security starts at the lowest level, and rises and falls automatically, adjusted by FunCaptcha's monitoring system. The Enhanced level has more challenges to solve, but is very hard for spammer programs to get past]]></phrase>
+    <phrase title="option_funcaptcha_theme" version_id="1" version_string="1.0.1.0"><![CDATA[Theme]]></phrase>
+    <phrase title="option_funcaptcha_theme_explain" version_id="1" version_string="1.0.1.0"><![CDATA[This will change the appearance of FunCaptcha (see <a href="http://www.funcaptcha.co/themes/" target="\&quot;_blank\&quot;">here</a> for what they look like)]]></phrase>
+    <phrase title="option_group_funCaptcha_Options" version_id="1" version_string="1.0.0"><![CDATA[FunCaptcha options]]></phrase>
     <phrase title="option_group_funCaptcha_Options_description" version_id="1" version_string="1.0.0"><![CDATA[Configure and customise FunCaptcha.]]></phrase>
   </phrases>
   <route_prefixes/>
