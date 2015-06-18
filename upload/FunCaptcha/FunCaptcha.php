@@ -375,12 +375,15 @@ if ( ! class_exists('FUNCAPTCHA')) {
 					'args'				=> $args
 				);
 				$result = $this->doPostReturnObject('/fc/v/', $data);
+
+				return $result->solved;
 			}
 			else
 			{
 				$this->msgLog("ERROR", "Unable check the result.  Please check that you passed in the correct public, private keys.");
 			}
-			return $result->solved;
+
+			return false;
 		}
 
 		/**
