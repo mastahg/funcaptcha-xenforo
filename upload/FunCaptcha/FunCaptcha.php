@@ -367,7 +367,7 @@ if ( ! class_exists('FUNCAPTCHA')) {
 				$this->msgLog("DEBUG", "Private key: '$this->funcaptcha_private_key'");
 			}
 
-			if ($_POST['fc-token']) {
+			if (array_key_exists('fc-token', $_POST)) {
 				$data = array(
 					'private_key' 		=> $this->funcaptcha_private_key,
 					'session_token' 	=> $_POST['fc-token'],
