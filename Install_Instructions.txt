@@ -1,12 +1,12 @@
 Installation Intructions
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Copy the contents of the Upload folder into /Library folder within the site root,
+1. Copy the contents of the Upload folder into the xenforo root directory. This will be the one with the folders js and library included.
 2. Log into AdminCP then 'Home' TAB then 'install Add-on'
 3. Click to 'Install from uploaded file' and browse here to select 'addon-FunCaptcha.xml'
 4. To configure in AdminCP click 'Home' TAB then 'Options' menu then:
 	a) Click 'FunCaptcha Options',
-	b) Enter your Public and Private keys,
+	b) Enter your Public and Private keys generated from http://funcaptcha.com
 	c) Set any other configuration options,
 	d) Click 'Save Changes'.
 5. FunCaptcha will now be enabled.
