@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="FunCaptcha" title="Fun Captcha" version_string="1.0.2.0" version_id="1" url="" install_callback_class="FunCaptcha_FunCaptcha" install_callback_method="Addon_Install" uninstall_callback_class="" uninstall_callback_method="">
+<addon addon_id="FunCaptcha" title="FunCaptcha" version_string="1.0.2.0" version_id="1" url="" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
   <admin_templates/>
   <admin_template_modifications/>
   <code_events/>
-  <code_event_listeners>
-    <listener event_id="option_captcha_render" execute_order="10" callback_class="FunCaptcha_FunCaptcha" callback_method="CaptchaHook" active="1" hint="" description=""/>
-  </code_event_listeners>
   <cron/>
   <email_templates/>
   <email_template_modifications/>
