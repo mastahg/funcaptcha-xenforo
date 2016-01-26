@@ -31,8 +31,8 @@ if (!class_exists('FUNCAPTCHA')):
 		protected $funcaptcha_host = 'funcaptcha.com';
 		protected $funcaptcha_challenge_url = '';
 		protected $funcaptcha_debug = FALSE;
-		protected $funcaptcha_api_type = "php";
-		protected $funcaptcha_plugin_version = "1.1.0";
+		protected $funcaptcha_api_type = "xenforo";
+		protected $funcaptcha_plugin_version = "1.1.0.0";
 		protected $funcaptcha_security_level = 0;
 		protected $funcaptcha_lightbox_mode = FALSE;
 		protected $funcaptcha_lightbox_button_id = "";
