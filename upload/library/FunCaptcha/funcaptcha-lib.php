@@ -1,119 +1,38 @@
 <?php
+/*
+ * FunCaptcha
+ * PHP Integration Library
+ *
+ * @version 1.1.0
+ *
+ * Copyright (c) 2013 SwipeAds -- http://www.funcaptcha.com
+ * AUTHOR:
+ *   Kevin Gosschalk
+ *   Brandon Bakker
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+define("FUNCAPTCHA_SERVER", "funcaptcha.com");
 
-class FunCaptcha_FunCaptcha extends XenForo_Captcha_Abstract
-{
-	public static function CaptchaHook(array &$extraChoices, XenForo_View $view, array $preparedOption)
-	{
-		$extraChoices['FunCaptcha'] = array(
-			'label'	=> 'FunCaptcha',
-			'hint'	=> 'Get Free account from <a href="http://funcaptcha.co">FunCaptcha</a>',
-			'value' => 'FunCaptcha_FunCaptcha',
-		);
-	}
-	
-	public static function Addon_Install()
-	{
-		// set FunCaptcha as default captcha:
-		$dw = XenForo_DataWriter::create('XenForo_DataWriter_Option');
-        $dw->setExistingData('captcha', true);
-        $dw->set('option_value', 'FunCaptcha_FunCaptcha');
-        $dw->save();
-	}
-	
-	public function isValid(array $input)
-	{
-		$options = XenForo_Application::get('options');
-		if (empty($options->funcaptcha_public) || empty($options->funcaptcha_private)) {
-			return true;
-		}		
-
-		$funcaptcha =  new FUNCAPTCHA();
-		$funcaptcha->setProxy($options->funcaptcha_proxy);
-		$funcaptcha->setTheme($options->funcaptcha_theme);
-		$funcaptcha->setNoJSFallback($options->funcaptcha_javascript);
-		$score =  $funcaptcha->checkResult($options->funcaptcha_private, $input);
-		if ($score) 
-			return true;
-		else 
-		{
-			$this->error = 'funcaptcha_unverified';
-		}
-
-		return false;
-	}
-	
-	public function renderInternal(XenForo_View $view)
-	{
-		$options = XenForo_Application::get('options');
-		if (empty($options->funcaptcha_public) || empty($options->funcaptcha_private)) 
-		{
-			if (XenForo_Application::debugMode())
-				return 'FunCaptcha has not yet been configured.';
-			else
-				return '';//':options not set';
-		}
-		
-		// create api:
-		$funcaptcha =  new FUNCAPTCHA();
-		$funcaptcha->setSecurityLevel($options->funcaptcha_security);
-		$funcaptcha->setProxy($options->funcaptcha_proxy);
-		$funcaptcha->setTheme($options->funcaptcha_theme);
-		$funcaptcha->setNoJSFallback($options->funcaptcha_javascript);
-		
-		$output = "<div class=\"blockrow\"><input type=hidden value='1' id='humanverify' name='humanverify' /><div class=\"group\"><li>";
-		$output = $output . $funcaptcha->getFunCaptcha($options->funcaptcha_public);
-		$output = $output . "</li></div></div>";
-		
-		// update any options from server:
-		if (isset($funcaptcha->remote_options))
-			$this->SaveRemoteOptions($funcaptcha->remote_options);
-		
-		// return markup:
-		return $output;
-	}
-	
-	private function SaveRemoteOptions($remote_options)
-	{
-		$arOptMap = array(
-			'proxy' => 'funcaptcha_proxy',
-			'security_level' => 'funcaptcha_security',
-			'theme' => 'funcaptcha_theme',
-			'noscript_support' => 'funcaptcha_javascript',
-		);
-
-		// save options:
-		XenForo_Db::beginTransaction();
-		
-		foreach(array_keys($remote_options) as $key)
-		{
-			try{
-				if (isset($arOptMap[$key]))
-				{
-					$dw = XenForo_DataWriter::create('XenForo_DataWriter_Option');
-					$dw->setExistingData($arOptMap[$key], true);
-					$dw->set('option_value', $remote_options[$key]);
-					$dw->save();
-				}
-			} catch (\Exception $e) {}
-		}
-		
-		XenForo_Db::commit();
-	}
-}
-
-
-define("FUNCAPTCHA_SERVER", "funcaptcha.co");
 // Define class if it does not already exist
-if ( ! class_exists('FUNCAPTCHA')) {
+if (!class_exists('FUNCAPTCHA')):
+
 	class FUNCAPTCHA {
 		// Set defaults for values that can be specified via the config file or passed in via __construct.
 		protected $funcaptcha_public_key = '';
 		protected $funcaptcha_private_key = '';
-		protected $funcaptcha_host = 'funcaptcha.co';
+		protected $funcaptcha_host = 'funcaptcha.com';
 		protected $funcaptcha_challenge_url = '';
 		protected $funcaptcha_debug = FALSE;
-		protected $funcaptcha_api_type = "xenforo";
-		protected $funcaptcha_plugin_version = "1.0.1.0";
+		protected $funcaptcha_api_type = "php";
+		protected $funcaptcha_plugin_version = "1.1.0";
 		protected $funcaptcha_security_level = 0;
 		protected $funcaptcha_lightbox_mode = FALSE;
 		protected $funcaptcha_lightbox_button_id = "";
@@ -124,27 +43,22 @@ if ( ! class_exists('FUNCAPTCHA')) {
 		protected $funcaptcha_proxy;
 		protected $funcaptcha_json_path = "json.php";
 		protected $funcaptcha_nojs_fallback = false;
-		protected $version = '1.0.1';
-		public $remote_options;
+		protected $version = '1.1.0';
 
 		/**
 		 * Constructor
 		 *
 		 */
-		public function __construct()
-		{		
+		public function __construct() {
 			$this->funcaptcha_host = FUNCAPTCHA_SERVER;
 
 			if ($this->funcaptcha_api_type == "vBulletin") {
 				$this->funcaptcha_json_path = DIR . "/includes/json.php";
 			}
-			
-			if ($this->funcaptcha_host == "")
-			{
+
+			if ($this->funcaptcha_host == "") {
 				$this->msgLog("ERROR", "Warning: Host is not set.");
-			}
-			else
-			{
+			} else {
 				$this->msgLog("DEBUG", "Set Host: '$this->funcaptcha_host'");
 			}
 		}
@@ -156,111 +70,82 @@ if ( ! class_exists('FUNCAPTCHA')) {
 		 * @param array $args - Additional information to pass to FunCaptcha servers
 		 * @return string
 		 */
-		public function getFunCaptcha($public_key, $args=null)
-		{
+		public function getFunCaptcha($public_key, $args = null) {
 
 			$this->funcaptcha_public_key = $public_key;
-			if ($this->funcaptcha_public_key == "" || $this->funcaptcha_public_key == null)
-			{
+			if ($this->funcaptcha_public_key == "" || $this->funcaptcha_public_key == null) {
 				$this->msgLog("ERROR", "Warning: Public key is not set.");
-			}
-			else
-			{
+			} else {
 				$this->msgLog("DEBUG", "Public key: '$this->funcaptcha_public_key'");
 			}
 
 
 			//send your public key, your site name, the users ip and browser type.
 			$data = array(
-				'public_key'			=> $this->funcaptcha_public_key,
-				'site' 					=> $_SERVER["SERVER_NAME"],
-				'userip'	 			=> $_SERVER["REMOTE_ADDR"],
-				'userbrowser'			=> $_SERVER['HTTP_USER_AGENT'],
-				'api_type'				=> $this->funcaptcha_api_type,
-				'plugin_version'		=> $this->funcaptcha_plugin_version,
-				'security_level'		=> $this->funcaptcha_security_level,
-				'language'				=> $this->funcaptcha_language,
-				'noscript_support'		=> $this->funcaptcha_nojs_fallback,
-				'lightbox'				=> $this->funcaptcha_lightbox_mode,
-				'lightbox_button_id'	=> $this->funcaptcha_lightbox_button_id,
-				'lightbox_submit_js'	=> $this->funcaptcha_lightbox_submit_javascript,
-				'theme'					=> $this->funcaptcha_theme,
-				'args'					=> $args
+				'public_key' => $this->funcaptcha_public_key,
+				'site' => $_SERVER["SERVER_NAME"],
+				'userip' => $this->getIP(),
+				'userbrowser' => $_SERVER['HTTP_USER_AGENT'],
+				'api_type' => $this->funcaptcha_api_type,
+				'plugin_version' => $this->funcaptcha_plugin_version,
+				'security_level' => $this->funcaptcha_security_level,
+				'language' => $this->funcaptcha_language,
+				'noscript_support' => $this->funcaptcha_nojs_fallback,
+				'lightbox' => $this->funcaptcha_lightbox_mode,
+				'lightbox_button_id' => $this->funcaptcha_lightbox_button_id,
+				'lightbox_submit_js' => $this->funcaptcha_lightbox_submit_javascript,
+				'theme' => $this->funcaptcha_theme,
+				'args' => $args
 			);
 
 			//get session token.
 			$session = $this->doPostReturnObject('/fc/gt/', $data);
 			$this->session_token = $session->token;
 			$this->funcaptcha_challenge_url = $session->challenge_url;
-			
-			if (!$this->funcaptcha_challenge_url)
-			{
+
+			if (!$this->funcaptcha_challenge_url) {
 				$this->msgLog("ERROR", "Warning: Couldn't retrieve challenge url.");
-			}
-			else
-			{
+			} else {
 				$this->msgLog("DEBUG", "Challenge url: '$this->funcaptcha_challenge_url'");
 			}
-			
-			if (!$this->session_token)
-			{
+
+			if (!$this->session_token) {
 				$this->msgLog("ERROR", "Warning: Couldn't retrieve session.");
-			}
-			else
-			{
+			} else {
 				$this->msgLog("DEBUG", "Session token: '$this->session_token'");
 			}
-			
-			// get inbound settings and update local:
-			if (isset($session->remote_options))
-			{
-				// set public accessible array:
-				$this->remote_options = $session->remote_options;
-				
-				// update local props:
-				$this->updateLocal($session->remote_options);
-			}
 
-			if ($this->session_token && $this->funcaptcha_challenge_url && $this->funcaptcha_host) 
-			{
+			if ($this->session_token && $this->funcaptcha_challenge_url && $this->funcaptcha_host) {
 				//return html to generate captcha.
 				$url = "https://";
-				$url.= $this->funcaptcha_host;
-				$url.= $this->funcaptcha_challenge_url;
-				$url.= "?cache=" . time();
-				return "<div id='FunCaptcha'></div><input type='hidden' id='FunCaptcha-Token' name='fc-token' value='" . $this->session_token . "'><script src='". $url ."' type='text/javascript' language='JavaScript'></script>". ($this->funcaptcha_nojs_fallback ? $session->noscript : "<noscript><p>Please enable JavaScript to continue.</p></noscript>");
-			}
-			else
-			{
+				$url .= $this->funcaptcha_host;
+				$url .= $this->funcaptcha_challenge_url;
+				$url .= "?cache=" . time();
+				return "<div id='FunCaptcha'></div><input type='hidden' id='FunCaptcha-Token' name='fc-token' value='" . $this->session_token . "'><script src='" . $url . "' type='text/javascript' language='JavaScript'></script>" . ($this->funcaptcha_nojs_fallback ? $session->noscript : "<noscript><p>Please enable JavaScript to continue.</p></noscript>");
+			} else {
 				//if failed to connect, display helpful message.
 				$style = "padding: 10px; border: 1px solid #b1abb2; background: #f1f1f1; color: #000000;";
-				$message = "The CAPTCHA cannot be displayed. This may be a configuration or server problem. You may not be able to continue. Please visit our <a href='http://funcaptcha.co/status' target='_blank'>status page</a> for more information or to contact us.";
+				$message = "The CAPTCHA cannot be displayed. This may be a configuration or server problem. You may not be able to continue. Please visit our <a href='http://funcaptcha.com/status' target='_blank'>status page</a> for more information or to contact us.";
 				echo "<p style=\"$style\">$message</p>\n";
 			}
 		}
-		
+
+
 		/**
-		 * Internal function - updates local properties with inbound values.
+		 * Returns the remote user's IP address
 		 *
-		 * @param array $remote_options - inbound remote server set options
-		 * @return null
-		 */
-		private function updateLocal($remote_options)
-		{
-			$arOptMap = array(
-				'proxy' => 'funcaptcha_proxy',
-				'security_level' => 'funcaptcha_security',
-				'theme' => 'funcaptcha_theme',
-				'noscript_support' => 'funcaptcha_javascript',
-			);
-			
-			foreach(array_keys($remote_options) as $key)
-			{
-				try{
-					if (isset($arOptMap[$key]) && isset($this->{$arOptMap[$key]}))
-						$this->{$arOptMap[$key]} = $remote_options[$key];
-				} catch (\Exception $e) {}
+		 * @return String
+		 * */
+		public function getIP() {
+			if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+				return $_SERVER["HTTP_X_FORWARDED_FOR"];
+			} else if (isset($_SERVER["REMOTE_ADDR"])) {
+				return $_SERVER["REMOTE_ADDR"];
+			} else if (isset($_SERVER["HTTP_CLIENT_IP"])) {
+				return $_SERVER["HTTP_CLIENT_IP"];
 			}
+
+			return "";
 		}
 
 		/**
@@ -283,7 +168,7 @@ if ( ! class_exists('FUNCAPTCHA')) {
 		/**
 		 * Set theme of FunCaptcha
 		 *
-		 * See here for options: https://www.funcaptcha.co/themes/
+		 * See here for options: https://www.funcaptcha.com/themes/
 		 *
 		 * @param int $theme - theme option, 0 is default.
 		 * @return boolean
@@ -337,7 +222,7 @@ if ( ! class_exists('FUNCAPTCHA')) {
 		 * @param boolean $submit_javascript_function_name - Name of javascript function to call on lightbox FunCaptcha completion.
 		 * @return boolean
 		 */
-		public function setLightboxMode($enable, $submit_button_id=null, $submit_javascript_function_name=null) {
+		public function setLightboxMode($enable, $submit_button_id = null, $submit_javascript_function_name = null) {
 			$this->funcaptcha_lightbox_mode = $enable;
 			$this->funcaptcha_lightbox_button_id = $submit_button_id;
 			$this->funcaptcha_lightbox_submit_javascript = $submit_javascript_function_name;
@@ -353,34 +238,39 @@ if ( ! class_exists('FUNCAPTCHA')) {
 		 * @param array $args - Additional information to pass to FunCaptcha servers
 		 * @return boolean
 		 */
-		public function checkResult($private_key, $args=null) {
+		public function checkResult($private_key, $args = null) {
 			$this->funcaptcha_private_key = $private_key;
 
 			$this->msgLog("DEBUG", ("Session token to check: " . $_POST['fc-token']));
 
-			if ($this->funcaptcha_private_key == "")
-			{
+			if ($this->funcaptcha_private_key == "") {
 				$this->msgLog("ERROR", "Warning: Private key is not set.");
-			}
-			else
-			{
+			} else {
 				$this->msgLog("DEBUG", "Private key: '$this->funcaptcha_private_key'");
 			}
 
-			if ($_POST['fc-token']) {
+			if (array_key_exists('fc-token', $_POST)) {
 				$data = array(
-					'private_key' 		=> $this->funcaptcha_private_key,
-					'session_token' 	=> $_POST['fc-token'],
-					'fc_rc_challenge' 	=> (isset($_POST['fc_rc_challenge']) ? $_POST['fc_rc_challenge'] : null),
-					'args'				=> $args
+					'private_key' => $this->funcaptcha_private_key,
+					'session_token' => $_POST['fc-token'],
+					'fc_rc_challenge' => (isset($_POST['fc_rc_challenge']) ? $_POST['fc_rc_challenge'] : null),
+					'args' => $args
 				);
+
 				$result = $this->doPostReturnObject('/fc/v/', $data);
-			}
-			else
-			{
+
+				if($result && isset($result->solved)) {
+					return $result->solved;
+				} else {
+					$this->msgLog("ERROR", "Unable check the result.  Please check that you passed in the correct public, private keys.");
+					return false;
+				}
+
+			} else {
 				$this->msgLog("ERROR", "Unable check the result.  Please check that you passed in the correct public, private keys.");
 			}
-			return $result->solved;
+
+			return false;
 		}
 
 		/**
@@ -394,69 +284,64 @@ if ( ! class_exists('FUNCAPTCHA')) {
 			$result = "";
 			$fields_string = "";
 			$data_string = "";
-			foreach($data as $key=>$value) {
+			foreach ($data as $key => $value) {
 				if (is_array($value)) {
-					if ( ! empty($value)) {
+					if (!empty($value)) {
 						foreach ($value as $k => $v) {
-							if (!is_array($v)) {
-								$data_string .= $key . '['. $k .']=' . $v . '&';
-							}
+							$data_string .= $key . '[' . $k . ']=' . $v . '&';
 						}
 					} else {
 						$data_string .= $key . '=&';
 					}
 				} else {
-					$data_string .= $key.'='.$value.'&';
+					$data_string .= $key . '=' . $value . '&';
 				}
 			}
-			rtrim($data_string,'&');
+			rtrim($data_string, '&');
 
 			$curl_url = "https://";
-			$curl_url.= $this->funcaptcha_host;
-			$curl_url.= $url_path;
+			$curl_url .= $this->funcaptcha_host;
+			$curl_url .= $url_path;
 
 			// Log it.
 			$this->msgLog("DEBUG", "cURl: url='$curl_url', data='$data_string'");
 
 			if (function_exists('curl_init') and function_exists('curl_exec')) {
-				if ($ch = curl_init($curl_url))
-				{
+				if ($ch = curl_init($curl_url)) {
 					// Set the cURL options.
 					curl_setopt($ch, CURLOPT_POST, count($data));
 					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
 					if (isset($this->funcaptcha_proxy)) {
-						curl_setopt($ch,CURLOPT_PROXY, $this->funcaptcha_proxy);
+						curl_setopt($ch, CURLOPT_PROXY, $this->funcaptcha_proxy);
 					}
 					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 					curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 					curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
 					// Execute the cURL request.
-					$result = curl_exec($ch);			
+					$result = curl_exec($ch);
 					curl_close($ch);
-				}
-				else
-				{
+				} else {
 					// Log it.
 					$this->msgLog("DEBUG", "Unable to enable cURL: url='$curl_url'");
 				}
 			} else {
 				// Log it.
 				// Build a header
-				$http_request  = "POST $url_path HTTP/1.1\r\n";
+				$http_request = "POST $url_path HTTP/1.1\r\n";
 				$http_request .= "Host: $this->funcaptcha_host\r\n";
 				$http_request .= "Content-Type: application/x-www-form-urlencoded;\r\n";
 				$http_request .= "Content-Length: " . strlen($data_string) . "\r\n";
 				$http_request .= "User-Agent: FunCaptcha/PHP " . $this->funcaptcha_plugin_version . "\r\n";
 				$http_request .= "Connection: Close\r\n";
 				$http_request .= "\r\n";
-				$http_request .= $data_string ."\r\n";
+				$http_request .= $data_string . "\r\n";
 
 				$result = '';
 				$errno = $errstr = "";
 				$fs = fsockopen("ssl://" . $this->funcaptcha_host, 443, $errno, $errstr, 10);
 
-				if( false == $fs ) {
+				if (false == $fs) {
 					$this->msgLog("ERROR", "Could not open socket");
 				} else {
 					fwrite($fs, $http_request);
@@ -482,7 +367,7 @@ if ( ! class_exists('FUNCAPTCHA')) {
 			$result = array();
 			if (function_exists("json_decode")) {
 				try {
-					$result = json_decode( $string);
+					$result = json_decode($string);
 				} catch (Exception $e) {
 					$this->msgLog("ERROR", "Exception when calling json_decode: " . $e->getMessage());
 					$result = null;
@@ -504,21 +389,18 @@ if ( ! class_exists('FUNCAPTCHA')) {
 		 * @param string $message - message to log
 		 * @return null
 		 */
-		protected function msgLog($type, $message)
-		{
+		protected function msgLog($type, $message) {
 
 			// Is it an error message?
-			if (FALSE !== stripos($type, "error"))
-			{
+			if (FALSE !== stripos($type, "error")) {
 				error_log($message);
 			}
 
 			// Build the full message.
 			$debug_message = "<p style='padding: 10px; border: 1px solid #2389d1; background: #43c0ff; color: #134276;'><strong>$type:</strong> $message</p>\n";
-			
+
 			// Output to screen if in debug mode
-			if ($this->funcaptcha_debug)
-			{
+			if ($this->funcaptcha_debug) {
 				echo "$debug_message";
 			}
 		}
@@ -528,9 +410,9 @@ if ( ! class_exists('FUNCAPTCHA')) {
 		 *
 		 * @param boolean $mode debug state
 		 */
-		public function debugMode($mode)
-		{
+		public function debugMode($mode) {
 			$this->funcaptcha_debug = $mode;
 		}
+
 	}
-}
+endif;
