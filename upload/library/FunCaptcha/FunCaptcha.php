@@ -9,6 +9,24 @@
 class FunCaptcha_FunCaptcha extends XenForo_Captcha_Abstract
 {
 
+    public static function CaptchaHook(array &$extraChoices, XenForo_View $view, array $preparedOption)
+    {
+        $extraChoices['FunCaptcha'] = array(
+            'label' => 'FunCaptcha',
+            'hint'  => 'Get Free account from <a href="http://funcaptcha.co">FunCaptcha</a>',
+            'value' => 'FunCaptcha_FunCaptcha',
+        );
+    }
+
+    public static function Addon_Install()
+    {
+        // set FunCaptcha as default captcha:
+        $dw = XenForo_DataWriter::create('XenForo_DataWriter_Option');
+        $dw->setExistingData('captcha', true);
+        $dw->set('option_value', 'FunCaptcha_FunCaptcha');
+        $dw->save();
+    }
+
     public function isValid(array $input)
 	{
 		$options = XenForo_Application::get('options')->getOptions();

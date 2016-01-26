@@ -5,7 +5,7 @@
  *
  * @version 1.1.0
  *
- * Copyright (c) 2013 SwipeAds -- http://www.funcaptcha.co
+ * Copyright (c) 2013 SwipeAds -- http://www.funcaptcha.com
  * AUTHOR:
  *   Kevin Gosschalk
  *   Brandon Bakker
@@ -19,7 +19,7 @@
  * THE SOFTWARE.
  *
  */
-define("FUNCAPTCHA_SERVER", "funcaptcha.co");
+define("FUNCAPTCHA_SERVER", "funcaptcha.com");
 
 // Define class if it does not already exist
 if (!class_exists('FUNCAPTCHA')):
@@ -28,11 +28,11 @@ if (!class_exists('FUNCAPTCHA')):
 		// Set defaults for values that can be specified via the config file or passed in via __construct.
 		protected $funcaptcha_public_key = '';
 		protected $funcaptcha_private_key = '';
-		protected $funcaptcha_host = 'funcaptcha.co';
+		protected $funcaptcha_host = 'funcaptcha.com';
 		protected $funcaptcha_challenge_url = '';
 		protected $funcaptcha_debug = FALSE;
-		protected $funcaptcha_api_type = "php";
-		protected $funcaptcha_plugin_version = "1.1.0";
+		protected $funcaptcha_api_type = "xenforo";
+		protected $funcaptcha_plugin_version = "1.1.0.0";
 		protected $funcaptcha_security_level = 0;
 		protected $funcaptcha_lightbox_mode = FALSE;
 		protected $funcaptcha_lightbox_button_id = "";
@@ -125,7 +125,7 @@ if (!class_exists('FUNCAPTCHA')):
 			} else {
 				//if failed to connect, display helpful message.
 				$style = "padding: 10px; border: 1px solid #b1abb2; background: #f1f1f1; color: #000000;";
-				$message = "The CAPTCHA cannot be displayed. This may be a configuration or server problem. You may not be able to continue. Please visit our <a href='http://funcaptcha.co/status' target='_blank'>status page</a> for more information or to contact us.";
+				$message = "The CAPTCHA cannot be displayed. This may be a configuration or server problem. You may not be able to continue. Please visit our <a href='http://funcaptcha.com/status' target='_blank'>status page</a> for more information or to contact us.";
 				echo "<p style=\"$style\">$message</p>\n";
 			}
 		}
@@ -168,7 +168,7 @@ if (!class_exists('FUNCAPTCHA')):
 		/**
 		 * Set theme of FunCaptcha
 		 *
-		 * See here for options: https://www.funcaptcha.co/themes/
+		 * See here for options: https://www.funcaptcha.com/themes/
 		 *
 		 * @param int $theme - theme option, 0 is default.
 		 * @return boolean
