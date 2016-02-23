@@ -72,8 +72,51 @@ class FunCaptcha_FunCaptcha extends XenForo_Captcha_Abstract
                 $output = $funcaptcha->getFunCaptcha($options['funcaptcha_public']);
         } else {
                 $output = "<div class=\"blockrow\"><input type=hidden value='1' id='humanverify' name='humanverify' /><div class=\"group\"><li>";
-                $output = $output . $funcaptcha->getFunCaptcha($options['funcaptcha_public']);
-                $output = $output . "</li></div></div>";
+                // $output = $output . "<span class='fc-ctn'>" . $funcaptcha->getFunCaptcha($options['funcaptcha_public']);
+                $output = $output . "<span class='fc-ctn'>";
+                $output = $output . "<div id='funcaptcha' data-pkey='{$options['funcaptcha_public']}'></div>";
+                $output = $output . "</span></li></div></div>";
+
+                ob_clean();
+                ?>
+                <script src="https://funcaptcha.com/fc/api/" async defer></script>
+                <script>
+                if (typeof fc_query_created == 'undefined') {
+                    var fc_pkey = "<?= $options["funcaptcha_public"] ?>";
+                    var fc_query_created = true;
+                    jQuery(".footerLinks .OverlayTrigger").click(function() {
+                        jQuery(".xenOverlay").children("form").each(function(){
+                            if ($(this).attr("action").indexOf("contact") >= 0) {
+                                $(this).find(".fc-ctn").html("<div id='funcaptcha' data-pkey='"+fc_pkey+"'></div>");
+                            } else if ($(this).attr("action").indexOf("lost") >= 0) {
+                                $(this).find(".fc-ctn").html("");
+                            }
+                        });
+                        try {
+                            FunCaptcha();
+                        } catch (e) {
+                            
+                        }
+                    });
+                    jQuery(".lostPassword .OverlayTrigger").click(function() {
+                        jQuery(".xenOverlay").children("form").each(function(){
+                            if ($(this).attr("action").indexOf("contact") >= 0) {
+                                $(this).find(".fc-ctn").html("");
+                            } else if ($(this).attr("action").indexOf("lost") >= 0) {
+                                $(this).find(".fc-ctn").html("<div id='funcaptcha' data-pkey='"+fc_pkey+"'></div>");
+                            }
+                        });
+                        try {
+                            FunCaptcha();
+                        } catch (e) {
+                            
+                        }
+                    });
+                }
+                </script>
+                <?
+                $html = ob_get_clean();
+                $output = $output . $html;
         }
 
         return $output;
