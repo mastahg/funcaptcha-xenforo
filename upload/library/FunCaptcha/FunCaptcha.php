@@ -114,7 +114,7 @@ class FunCaptcha_FunCaptcha extends XenForo_Captcha_Abstract
                     });
                 }
                 </script>
-                <?
+                <?php
                 $html = ob_get_clean();
                 $output = $output . $html;
         }
