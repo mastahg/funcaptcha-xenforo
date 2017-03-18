@@ -249,10 +249,10 @@ if (!class_exists('FUNCAPTCHA')):
 				$this->msgLog("DEBUG", "Private key: '$this->funcaptcha_private_key'");
 			}
 
-			if (array_key_exists('fc-token', $_POST)) {
+			if (isset($_POST['fc-token']) {
 				$data = array(
 					'private_key' => $this->funcaptcha_private_key,
-					'session_token' => $_POST['fc-token'],
+					'session_token' => isset($_POST['fc-token']) ? $_POST['fc-token'] : null,
 					'fc_rc_challenge' => (isset($_POST['fc_rc_challenge']) ? $_POST['fc_rc_challenge'] : null),
 					'args' => $args
 				);
@@ -262,12 +262,12 @@ if (!class_exists('FUNCAPTCHA')):
 				if($result && isset($result->solved)) {
 					return $result->solved;
 				} else {
-					$this->msgLog("ERROR", "Unable check the result.  Please check that you passed in the correct public, private keys.");
+					$this->msgLog("ERROR", "Unable check the result.  Please check that you passed in the correct public, private keys and a valid session token.");
 					return false;
 				}
 
 			} else {
-				$this->msgLog("ERROR", "Unable check the result.  Please check that you passed in the correct public, private keys.");
+				$this->msgLog("ERROR", "Unable check the result.  Please check that you passed in the correct public, private keys and a valid session token.");
 			}
 
 			return false;
