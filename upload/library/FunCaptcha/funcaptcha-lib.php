@@ -241,7 +241,14 @@ if (!class_exists('FUNCAPTCHA')):
 		public function checkResult($private_key, $args = null) {
 			$this->funcaptcha_private_key = $private_key;
 
-			$this->msgLog("DEBUG", ("Session token to check: " . $_POST['fc-token']));
+			if (isset($_POST['fc-token'])) 
+			{
+				$this->msgLog("DEBUG", ("Session token to check: " . $_POST['fc-token']));
+			}
+			else
+			{
+				$this->msgLog("DEBUG", ("Session token to check was not supplied"));
+			}
 
 			if ($this->funcaptcha_private_key == "") {
 				$this->msgLog("ERROR", "Warning: Private key is not set.");
@@ -249,7 +256,8 @@ if (!class_exists('FUNCAPTCHA')):
 				$this->msgLog("DEBUG", "Private key: '$this->funcaptcha_private_key'");
 			}
 
-			if (isset($_POST['fc-token']) {
+			if (isset($_POST['fc-token'])) 
+			{
 				$data = array(
 					'private_key' => $this->funcaptcha_private_key,
 					'session_token' => isset($_POST['fc-token']) ? $_POST['fc-token'] : null,
